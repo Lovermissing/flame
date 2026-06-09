@@ -1,0 +1,30 @@
+{
+  "name": "fire-safety-laboratory",
+  "version": "1.0.0",
+  "description": "USTC Fire Safety Laboratory - Interactive fire safety education platform powered by AI",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "start": "vercel start",
+    "deploy": "vercel deploy --prod"
+  },
+  "dependencies": {
+    "openai": "^4.28.0"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "fire-safety",
+    "education",
+    "ustc",
+    "ai",
+    "interactive-learning"
+  ],
+  "author": "USTC",
+  "license": "MIT"
+}
