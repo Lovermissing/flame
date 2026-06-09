@@ -1146,3 +1146,461 @@ body {
         rgba(255, 87, 34, 0.6)
     );
 }
+
+/* ==================== IMAGE SIZE CONTROL ==================== */
+
+/* Scene cards in fire causes module */
+.scene-card img {
+    width: 100%;
+    max-width: 180px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 2px solid rgba(255, 182, 107, 0.3);
+}
+
+/* Step cards in extinguisher module */
+.step-card img {
+    width: 100%;
+    max-width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 2px solid rgba(255, 99, 71, 0.3);
+}
+
+/* Sub module detail images */
+.sub-image {
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    border: 3px solid rgba(255, 182, 107, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Scene grid container */
+.scene-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 10px 0;
+}
+
+/* Scene card styling */
+.scene-card {
+    background: linear-gradient(145deg, 
+        rgba(255, 248, 240, 0.12), 
+        rgba(255, 235, 215, 0.08)
+    );
+    border: 2px solid rgba(255, 182, 107, 0.3);
+    border-radius: 14px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.scene-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 152, 0, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);
+}
+
+.scene-number {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(255, 69, 0, 0.8);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.scene-card h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin: 8px 0 4px;
+}
+
+.scene-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Steps grid for extinguisher */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    padding: 10px 0;
+}
+
+.step-card {
+    background: linear-gradient(145deg, 
+        rgba(255, 248, 240, 0.12), 
+        rgba(255, 235, 215, 0.08)
+    );
+    border: 2px solid rgba(255, 99, 71, 0.3);
+    border-radius: 14px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+}
+
+.step-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 69, 0, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 69, 0, 0.2);
+}
+
+.step-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(255, 69, 0, 0.8);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.step-letter {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(255, 152, 0, 0.6);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.step-card h4 {
+    color: #fff;
+    font-size: 0.95rem;
+    margin: 6px 0 4px;
+}
+
+.step-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    line-height: 1.3;
+}
+
+.click-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 182, 107, 0.7);
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* Facts grid for smoke basics */
+.facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.fact-card {
+    background: linear-gradient(145deg, 
+        rgba(255, 248, 240, 0.1), 
+        rgba(255, 235, 215, 0.06)
+    );
+    border: 2px solid rgba(255, 182, 107, 0.25);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+}
+
+.fact-icon {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+}
+
+.fact-card h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.fact-card p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Myths list */
+.myths-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 10px 0;
+}
+
+.myth-card {
+    background: linear-gradient(145deg, 
+        rgba(255, 248, 240, 0.1), 
+        rgba(255, 235, 215, 0.06)
+    );
+    border: 2px solid rgba(255, 99, 71, 0.25);
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.myth-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.myth-icon {
+    font-size: 1.5rem;
+}
+
+.myth-label {
+    background: rgba(255, 69, 0, 0.6);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.myth-statement {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: flex-start;
+}
+
+.myth-mark {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.myth-statement p {
+    color: rgba(255, 200, 150, 0.9);
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+.truth-statement {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.truth-mark {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.truth-statement p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Sections list for emergency */
+.sections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.section-card {
+    background: linear-gradient(145deg, 
+        rgba(255, 248, 240, 0.1), 
+        rgba(255, 235, 215, 0.06)
+    );
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    border-radius: 14px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.section-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(76, 175, 80, 0.6);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.section-icon {
+    font-size: 1.8rem;
+}
+
+.section-header h4 {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.section-steps {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.section-steps li {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 4px;
+}
+
+.section-warning {
+    background: rgba(255, 69, 0, 0.15);
+    border: 1px solid rgba(255, 69, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: rgba(255, 200, 150, 0.9);
+    line-height: 1.4;
+}
+
+/* Sub detail styling */
+.sub-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sub-text h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.sub-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.prevention-box,
+.tip-box,
+.warning-box {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+}
+
+.warning-box {
+    background: rgba(255, 69, 0, 0.1);
+    border-color: rgba(255, 69, 0, 0.3);
+}
+
+.prevention-box h4,
+.tip-box h4,
+.warning-box h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.prevention-box p,
+.tip-box p,
+.warning-box p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.ai-question-box {
+    background: rgba(255, 152, 0, 0.1);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 12px;
+}
+
+.ai-question-box h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.ai-question-box p {
+    color: rgba(255, 200, 150, 0.9);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.ai-question-box em {
+    color: rgba(255, 219, 176, 1);
+}
+
+.pass-summary {
+    text-align: center;
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(255, 69, 0, 0.1);
+    border: 1px solid rgba(255, 69, 0, 0.3);
+    border-radius: 12px;
+}
+
+.pass-summary p {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.pass-word {
+    display: inline-block;
+    background: rgba(255, 69, 0, 0.6);
+    color: white;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 50%;
+    font-weight: 900;
+    margin: 0 2px;
+}
+
+.ai-prompt-section {
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(255, 152, 0, 0.1);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.ai-prompt-section p {
+    color: rgba(255, 200, 150, 0.9);
+    font-size: 0.95rem;
+}
+
+.module-description {
+    margin-bottom: 16px;
+}
+
+.module-description p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
