@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fire Safety Laboratory - USTC</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/animations.css">
 </head>
 <body>
     <!-- Background Image -->
-    <div class="background" style="background-image:url('images/hz1.jpg')"></div>
+    <div class="background" style="background-image: url('images/hz1.jpg');"></div>
     
     <!-- Young Qian Xuesen Character -->
     <div class="character-container">
@@ -18,7 +19,7 @@
     <!-- AI Chat Bubble -->
     <div class="chat-bubble" id="aiBubble">
         <div class="bubble-content">
-            <p id="aiMessage">Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen. Let's learn how to stay safe from fires together!</p>
+            <p id="aiMessage">Welcome! I'm Dr. Qian Xuesen. Let's explore fire safety together! Click any module to start learning.</p>
         </div>
         <div class="bubble-arrow"></div>
     </div>
@@ -26,77 +27,53 @@
     <!-- Central Title -->
     <div class="central-title" id="centralTitle">
         <h1>🔥 Fire Safety Laboratory</h1>
-        <p class="subtitle">Learn. Prevent. Protect.</p>
+        <p class="subtitle">Learn. Prevent. Protect. — For Everyone</p>
     </div>
     
-    <!-- Main Modules Grid -->
+    <!-- Main Modules Grid (5 modules arranged in a cross pattern) -->
     <div class="modules-grid" id="modulesGrid">
-        <!-- Module 1: Common Fire Causes -->
-        <div class="module-card" data-module="fire-causes">
+        <!-- Module 1: Common Fire Causes (Top) -->
+        <div class="module-card module-top" data-module="fire-causes">
             <div class="module-icon">🔥</div>
             <h3>Common Fire Causes</h3>
-            <p>Learn what starts fires at home</p>
+            <p>Everyday fire risks at home</p>
             <span class="module-tag">AI Explains</span>
         </div>
         
-        <!-- Module 2: Fire & Smoke Basics -->
-        <div class="module-card" data-module="smoke-basics">
+        <!-- Module 2: Fire & Smoke Basics (Right) -->
+        <div class="module-card module-right" data-module="smoke-basics">
             <div class="module-icon">💨</div>
             <h3>Fire & Smoke Basics</h3>
-            <p>Understand why smoke is deadly</p>
+            <p>Why smoke kills faster than fire</p>
             <span class="module-tag">AI Explains</span>
         </div>
         
-        <!-- Module 3: Fire Extinguisher Use -->
-        <div class="module-card" data-module="extinguisher">
+        <!-- Module 3: Fire Extinguisher PASS (Bottom) -->
+        <div class="module-card module-bottom" data-module="extinguisher">
             <div class="module-icon">🧯</div>
             <h3>Use a Fire Extinguisher</h3>
             <p>Simple PASS method guide</p>
             <span class="module-tag">Interactive</span>
         </div>
         
-        <!-- Module 4: Fire Misconceptions -->
-        <div class="module-card" data-module="misconceptions">
+        <!-- Module 4: Common Misconceptions (Left) -->
+        <div class="module-card module-left" data-module="misconceptions">
             <div class="module-icon">❌</div>
             <h3>Common Misconceptions</h3>
             <p>Debunk popular fire myths</p>
             <span class="module-tag">Quiz</span>
         </div>
         
-        <!-- Module 5: Emergency First Aid -->
-        <div class="module-card" data-module="first-aid">
+        <!-- Module 5: Emergency & First Aid (Center-Right) -->
+        <div class="module-card module-emergency" data-module="emergency">
             <div class="module-icon">🏥</div>
-            <h3>Emergency First Aid</h3>
-            <p>Treat minor burns & smoke</p>
+            <h3>Emergency & First Aid</h3>
+            <p>Burn care & emergency calls</p>
             <span class="module-tag">Guide</span>
-        </div>
-        
-        <!-- Module 6: Emergency Call Guide -->
-        <div class="module-card" data-module="emergency-call">
-            <div class="module-icon">📞</div>
-            <h3>Emergency Call Guide</h3>
-            <p>Practice reporting a fire</p>
-            <span class="module-tag">Practice</span>
-        </div>
-        
-        <!-- Module 7: Fire Safety Quiz -->
-        <div class="module-card" data-module="quiz">
-            <div class="module-icon">📝</div>
-            <h3>Fire Safety Quiz</h3>
-            <p>Test your knowledge</p>
-            <span class="module-tag">Challenge</span>
-        </div>
-        
-        <!-- Module 8: Free Q&A -->
-        <div class="module-card" data-module="qa">
-            <div class="module-icon">💬</div>
-            <h3>Free Q&A</h3>
-            <p>Ask anything about fire safety</p>
-            <span class="module-tag">AI Chat</span>
         </div>
     </div>
     
-    <!-- Module Detail Panel -->
+    <!-- Module Detail Overlay -->
     <div class="module-detail-overlay" id="moduleDetail">
         <div class="module-detail-container">
             <div class="detail-header">
@@ -104,19 +81,24 @@
                 <button class="close-btn" id="closeDetail">✕</button>
             </div>
             <div class="detail-content" id="moduleContent">
-                <!-- Content loads dynamically -->
+                <!-- Dynamic content loads here -->
             </div>
             <div class="chat-interface">
-                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai">
+                        <p>Welcome! I'm Dr. Qian Xuesen. Ask me anything about this topic!</p>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
                 <div class="chat-input">
-                    <input type="text" id="userInput" placeholder="Ask Dr. Qian about fire safety...">
+                    <input type="text" id="userInput" placeholder="Ask Dr. Qian about fire safety..." autocomplete="off">
                     <button id="sendBtn">Ask AI</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Sub-module Detail (for fire causes, extinguisher steps, etc.) -->
+    <!-- Sub Module Detail (for fire causes scenes, extinguisher steps, etc.) -->
     <div class="sub-module-overlay" id="subModuleDetail">
         <div class="sub-module-container">
             <div class="sub-header">
@@ -126,11 +108,13 @@
             <div class="sub-content" id="subContent">
                 <!-- Sub content loads dynamically -->
             </div>
-            <div class="back-to-module-btn" id="backToModule">← Back</div>
+            <div class="sub-footer">
+                <button class="back-to-module-btn" id="backToModule">← Back to Module</button>
+            </div>
         </div>
     </div>
     
-    <!-- Right Arrow for Next Lab -->
+    <!-- Next Lab Button -->
     <div class="next-lab-btn" id="nextLabBtn">
         <span>Next Lab →</span>
     </div>
@@ -139,11 +123,12 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loader">
             <div class="fire-animation">
-                <div class="flame"></div>
-                <div class="flame"></div>
-                <div class="flame"></div>
+                <div class="flame flame-1"></div>
+                <div class="flame flame-2"></div>
+                <div class="flame flame-3"></div>
             </div>
             <p>Loading Fire Safety Laboratory...</p>
+            <p class="loading-sub">Powered by Dr. Qian Xuesen AI</p>
         </div>
     </div>
     
