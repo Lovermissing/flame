@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/animations.css">
     <style>
-        /* ==================== CIRCULAR LAYOUT FIX ==================== */
+        /* ==================== CIRCULAR LAYOUT ==================== */
         .circle-container {
             position: absolute;
             top: 50%;
             left: 55%;
             transform: translate(-50%, -50%);
-            width: 820px;
-            height: 820px;
+            width: 880px;
+            height: 880px;
             z-index: 13;
             animation: modulesAppear 1s ease 1.5s forwards;
             opacity: 0;
@@ -66,30 +66,31 @@
             font-style: italic;
         }
 
-        /* Module Cards - Positioned in a Circle */
+        /* Module Cards */
         .module-card {
             position: absolute;
-            width: 155px;
-            height: 155px;
+            width: 158px;
+            height: 172px;
             background: linear-gradient(145deg, 
-                rgba(139, 119, 83, 0.88), 
-                rgba(89, 72, 49, 0.83)
+                rgba(139, 119, 83, 0.9), 
+                rgba(89, 72, 49, 0.85)
             );
             backdrop-filter: blur(12px);
             border: 2px solid rgba(255, 182, 107, 0.5);
-            border-radius: 20px;
-            padding: 16px 10px;
+            border-radius: 18px;
+            padding: 14px 10px 12px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 3px;
             box-shadow: 0 8px 25px rgba(221, 122, 0, 0.35);
             overflow: hidden;
             z-index: 3;
+            pointer-events: auto;
         }
 
         .module-card::before {
@@ -109,14 +110,13 @@
 
         .module-card:hover {
             background: linear-gradient(145deg, 
-                rgba(213, 146, 67, 0.92), 
-                rgba(164, 105, 45, 0.88)
+                rgba(213, 146, 67, 0.93), 
+                rgba(164, 105, 45, 0.9)
             );
             border-color: rgba(242, 153, 61, 0.9);
-            transform: translate(-50%, -50%) scale(1.1);
             box-shadow: 
-                0 20px 50px rgba(232, 111, 56, 0.6),
-                0 0 40px rgba(247, 128, 28, 0.35);
+                0 18px 45px rgba(232, 111, 56, 0.55),
+                0 0 35px rgba(247, 128, 28, 0.3);
             z-index: 10;
         }
 
@@ -141,7 +141,7 @@
         }
 
         .module-card h3 {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 700;
             color: #fff;
             text-shadow: 0 2px 8px rgba(228, 108, 64, 0.6);
@@ -151,14 +151,14 @@
         }
 
         .module-card p {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: rgba(254, 210, 161, 0.85);
             margin: 0;
             line-height: 1.2;
         }
 
         .module-tag {
-            font-size: 0.62rem;
+            font-size: 0.6rem;
             background: rgba(241, 143, 53, 0.65);
             padding: 2px 8px;
             border-radius: 10px;
@@ -170,47 +170,45 @@
             border: 1px solid rgba(253, 184, 94, 0.5);
         }
 
-        /* Circle positions for 5 modules */
-        /* Using angles: 0°, 72°, 144°, 216°, 288° */
-        /* Radius: 280px */
-
+        /* Circle positions - 5 modules evenly spaced */
+        /* Radius: 330px */
         .module-1 {
-            top: calc(50% - 305px);
+            top: calc(50% - 345px);
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
         .module-2 {
-            top: calc(50% - 125px);
-            left: calc(50% + 283px);
+            top: calc(50% - 117px);
+            left: calc(50% + 318px);
             transform: translate(-50%, -50%);
         }
 
         .module-3 {
-            top: calc(50% + 198px);
-            left: calc(50% + 197px);
+            top: calc(50% + 226px);
+            left: calc(50% + 218px);
             transform: translate(-50%, -50%);
         }
 
         .module-4 {
-            top: calc(50% + 243px);
-            left: calc(50% - 103px);
+            top: calc(50% + 278px);
+            left: calc(50% - 104px);
             transform: translate(-50%, -50%);
         }
 
         .module-5 {
-            top: calc(50% - 68px);
-            left: calc(50% - 292px);
+            top: calc(50% - 47px);
+            left: calc(50% - 336px);
             transform: translate(-50%, -50%);
         }
 
-        /* Hover fix for positioned cards */
+        /* Fix hover transforms for positioned cards */
         .module-1:hover,
         .module-2:hover,
         .module-3:hover,
         .module-4:hover,
         .module-5:hover {
-            transform: translate(-50%, -50%) scale(1.1);
+            transform: translate(-50%, -50%) scale(1.08);
         }
 
         /* ==================== IMAGE SIZE CONTROL ==================== */
@@ -236,7 +234,6 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        /* Scene grid */
         .scene-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -292,7 +289,6 @@
             line-height: 1.3;
         }
 
-        /* Steps grid */
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -361,10 +357,10 @@
         }
 
         /* Responsive adjustments */
-        @media (max-width: 960px) {
+        @media (max-width: 1024px) {
             .circle-container {
-                width: 640px;
-                height: 640px;
+                width: 680px;
+                height: 680px;
             }
             
             .circle-title h1 {
@@ -372,9 +368,9 @@
             }
             
             .module-card {
-                width: 130px;
-                height: 130px;
-                padding: 14px 8px;
+                width: 132px;
+                height: 148px;
+                padding: 12px 8px;
             }
             
             .module-card .module-icon {
@@ -382,24 +378,24 @@
             }
             
             .module-card h3 {
-                font-size: 0.8rem;
+                font-size: 0.78rem;
             }
             
             .module-card p {
-                font-size: 0.65rem;
+                font-size: 0.62rem;
             }
 
-            .module-1 { top: calc(50% - 235px); }
-            .module-2 { top: calc(50% - 96px); left: calc(50% + 218px); }
-            .module-3 { top: calc(50% + 152px); left: calc(50% + 152px); }
-            .module-4 { top: calc(50% + 187px); left: calc(50% - 79px); }
-            .module-5 { top: calc(50% - 52px); left: calc(50% - 225px); }
+            .module-1 { top: calc(50% - 262px); }
+            .module-2 { top: calc(50% - 91px); left: calc(50% + 246px); }
+            .module-3 { top: calc(50% + 175px); left: calc(50% + 167px); }
+            .module-4 { top: calc(50% + 215px); left: calc(50% - 82px); }
+            .module-5 { top: calc(50% - 43px); left: calc(50% - 256px); }
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 760px) {
             .circle-container {
-                width: 480px;
-                height: 480px;
+                width: 490px;
+                height: 490px;
             }
             
             .circle-title h1 {
@@ -411,8 +407,8 @@
             }
             
             .module-card {
-                width: 100px;
-                height: 100px;
+                width: 104px;
+                height: 118px;
                 padding: 10px 6px;
                 border-radius: 14px;
             }
@@ -430,21 +426,21 @@
             }
             
             .module-tag {
-                font-size: 0.55rem;
+                font-size: 0.52rem;
                 padding: 1px 5px;
             }
 
-            .module-1 { top: calc(50% - 175px); }
-            .module-2 { top: calc(50% - 72px); left: calc(50% + 162px); }
-            .module-3 { top: calc(50% + 113px); left: calc(50% + 113px); }
-            .module-4 { top: calc(50% + 139px); left: calc(50% - 59px); }
-            .module-5 { top: calc(50% - 39px); left: calc(50% - 168px); }
+            .module-1 { top: calc(50% - 186px); }
+            .module-2 { top: calc(50% - 68px); left: calc(50% + 176px); }
+            .module-3 { top: calc(50% + 124px); left: calc(50% + 120px); }
+            .module-4 { top: calc(50% + 152px); left: calc(50% - 62px); }
+            .module-5 { top: calc(50% - 34px); left: calc(50% - 182px); }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 540px) {
             .circle-container {
-                width: 340px;
-                height: 340px;
+                width: 360px;
+                height: 360px;
             }
             
             .circle-title h1 {
@@ -457,8 +453,8 @@
             }
             
             .module-card {
-                width: 76px;
-                height: 76px;
+                width: 82px;
+                height: 92px;
                 padding: 8px 4px;
                 border-radius: 12px;
             }
@@ -472,15 +468,15 @@
             }
             
             .module-tag {
-                font-size: 0.5rem;
+                font-size: 0.46rem;
                 padding: 1px 4px;
             }
 
-            .module-1 { top: calc(50% - 125px); }
-            .module-2 { top: calc(50% - 51px); left: calc(50% + 115px); }
-            .module-3 { top: calc(50% + 80px); left: calc(50% + 80px); }
-            .module-4 { top: calc(50% + 99px); left: calc(50% - 42px); }
-            .module-5 { top: calc(50% - 28px); left: calc(50% - 119px); }
+            .module-1 { top: calc(50% - 136px); }
+            .module-2 { top: calc(50% - 50px); left: calc(50% + 127px); }
+            .module-3 { top: calc(50% + 90px); left: calc(50% + 86px); }
+            .module-4 { top: calc(50% + 110px); left: calc(50% - 48px); }
+            .module-5 { top: calc(50% - 29px); left: calc(50% - 133px); }
         }
     </style>
 </head>
