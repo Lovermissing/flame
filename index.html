@@ -13,8 +13,8 @@
             top: 50%;
             left: 55%;
             transform: translate(-50%, -50%);
-            width: 880px;
-            height: 880px;
+            width: 950px;
+            height: 950px;
             z-index: 13;
             animation: modulesAppear 1s ease 1.5s forwards;
             opacity: 0;
@@ -69,16 +69,16 @@
         /* Module Cards */
         .module-card {
             position: absolute;
-            width: 158px;
-            height: 172px;
+            width: 165px;
+            height: 195px;
             background: linear-gradient(145deg, 
-                rgba(139, 119, 83, 0.9), 
-                rgba(89, 72, 49, 0.85)
+                rgba(139, 119, 83, 0.92), 
+                rgba(89, 72, 49, 0.88)
             );
             backdrop-filter: blur(12px);
             border: 2px solid rgba(255, 182, 107, 0.5);
-            border-radius: 18px;
-            padding: 14px 10px 12px;
+            border-radius: 20px;
+            padding: 16px 12px 14px;
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
@@ -86,7 +86,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 4px;
             box-shadow: 0 8px 25px rgba(221, 122, 0, 0.35);
             overflow: hidden;
             z-index: 3;
@@ -110,8 +110,8 @@
 
         .module-card:hover {
             background: linear-gradient(145deg, 
-                rgba(213, 146, 67, 0.93), 
-                rgba(164, 105, 45, 0.9)
+                rgba(213, 146, 67, 0.95), 
+                rgba(164, 105, 45, 0.92)
             );
             border-color: rgba(242, 153, 61, 0.9);
             box-shadow: 
@@ -130,7 +130,7 @@
         }
 
         .module-card .module-icon {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             line-height: 1;
             filter: drop-shadow(0 3px 7px rgba(233, 113, 0, 0.5));
             transition: transform 0.3s ease;
@@ -141,7 +141,7 @@
         }
 
         .module-card h3 {
-            font-size: 0.88rem;
+            font-size: 0.92rem;
             font-weight: 700;
             color: #fff;
             text-shadow: 0 2px 8px rgba(228, 108, 64, 0.6);
@@ -151,54 +151,54 @@
         }
 
         .module-card p {
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             color: rgba(254, 210, 161, 0.85);
             margin: 0;
             line-height: 1.2;
         }
 
         .module-tag {
-            font-size: 0.6rem;
+            font-size: 0.62rem;
             background: rgba(241, 143, 53, 0.65);
-            padding: 2px 8px;
-            border-radius: 10px;
+            padding: 3px 10px;
+            border-radius: 12px;
             color: #ffffff;
             font-weight: 600;
             letter-spacing: 0.3px;
-            margin-top: 2px;
+            margin-top: 3px;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(253, 184, 94, 0.5);
         }
 
         /* Circle positions - 5 modules evenly spaced */
-        /* Radius: 330px */
+        /* Radius: 370px */
         .module-1 {
-            top: calc(50% - 345px);
+            top: calc(50% - 385px);
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
         .module-2 {
-            top: calc(50% - 117px);
-            left: calc(50% + 318px);
+            top: calc(50% - 190px);
+            left: calc(50% + 338px);
             transform: translate(-50%, -50%);
         }
 
         .module-3 {
-            top: calc(50% + 226px);
-            left: calc(50% + 218px);
+            top: calc(50% + 230px);
+            left: calc(50% + 290px);
             transform: translate(-50%, -50%);
         }
 
         .module-4 {
-            top: calc(50% + 278px);
-            left: calc(50% - 104px);
+            top: calc(50% + 365px);
+            left: calc(50% - 50px);
             transform: translate(-50%, -50%);
         }
 
         .module-5 {
-            top: calc(50% - 47px);
-            left: calc(50% - 336px);
+            top: calc(50% - 60px);
+            left: calc(50% - 375px);
             transform: translate(-50%, -50%);
         }
 
@@ -267,31 +267,31 @@
             left: 6px;
             background: rgba(255, 69, 0, 0.8);
             color: white;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
         }
 
         .scene-card h4 {
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             margin: 6px 0 4px;
         }
 
         .scene-card p {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.78rem;
-            line-height: 1.3;
+            font-size: 0.8rem;
+            line-height: 1.35;
         }
 
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
             gap: 12px;
             padding: 10px 0;
         }
@@ -322,14 +322,14 @@
             left: 6px;
             background: rgba(255, 69, 0, 0.8);
             color: white;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 600;
         }
 
         .step-letter {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 900;
             color: rgba(255, 152, 0, 0.5);
             line-height: 1;
@@ -338,29 +338,29 @@
 
         .step-card h4 {
             color: #fff;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             margin: 6px 0 4px;
         }
 
         .step-card p {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.75rem;
-            line-height: 1.3;
+            font-size: 0.78rem;
+            line-height: 1.35;
         }
 
         .click-hint {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: rgba(255, 182, 107, 0.7);
             margin-top: 6px;
             font-style: italic;
         }
 
         /* Responsive adjustments */
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
             .circle-container {
-                width: 680px;
-                height: 680px;
+                width: 720px;
+                height: 720px;
             }
             
             .circle-title h1 {
@@ -368,34 +368,34 @@
             }
             
             .module-card {
-                width: 132px;
-                height: 148px;
-                padding: 12px 8px;
+                width: 138px;
+                height: 162px;
+                padding: 14px 10px;
             }
             
             .module-card .module-icon {
-                font-size: 1.8rem;
+                font-size: 1.9rem;
             }
             
             .module-card h3 {
-                font-size: 0.78rem;
+                font-size: 0.82rem;
             }
             
             .module-card p {
-                font-size: 0.62rem;
+                font-size: 0.65rem;
             }
 
-            .module-1 { top: calc(50% - 262px); }
-            .module-2 { top: calc(50% - 91px); left: calc(50% + 246px); }
-            .module-3 { top: calc(50% + 175px); left: calc(50% + 167px); }
-            .module-4 { top: calc(50% + 215px); left: calc(50% - 82px); }
-            .module-5 { top: calc(50% - 43px); left: calc(50% - 256px); }
+            .module-1 { top: calc(50% - 285px); }
+            .module-2 { top: calc(50% - 148px); left: calc(50% + 258px); }
+            .module-3 { top: calc(50% + 178px); left: calc(50% + 222px); }
+            .module-4 { top: calc(50% + 275px); left: calc(50% - 42px); }
+            .module-5 { top: calc(50% - 52px); left: calc(50% - 282px); }
         }
 
-        @media (max-width: 760px) {
+        @media (max-width: 810px) {
             .circle-container {
-                width: 490px;
-                height: 490px;
+                width: 520px;
+                height: 520px;
             }
             
             .circle-title h1 {
@@ -407,18 +407,18 @@
             }
             
             .module-card {
-                width: 104px;
-                height: 118px;
-                padding: 10px 6px;
-                border-radius: 14px;
+                width: 108px;
+                height: 128px;
+                padding: 10px 8px;
+                border-radius: 16px;
             }
             
             .module-card .module-icon {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
             
             .module-card h3 {
-                font-size: 0.65rem;
+                font-size: 0.68rem;
             }
             
             .module-card p {
@@ -426,21 +426,21 @@
             }
             
             .module-tag {
-                font-size: 0.52rem;
-                padding: 1px 5px;
+                font-size: 0.55rem;
+                padding: 2px 6px;
             }
 
-            .module-1 { top: calc(50% - 186px); }
-            .module-2 { top: calc(50% - 68px); left: calc(50% + 176px); }
-            .module-3 { top: calc(50% + 124px); left: calc(50% + 120px); }
-            .module-4 { top: calc(50% + 152px); left: calc(50% - 62px); }
-            .module-5 { top: calc(50% - 34px); left: calc(50% - 182px); }
+            .module-1 { top: calc(50% - 206px); }
+            .module-2 { top: calc(50% - 108px); left: calc(50% + 186px); }
+            .module-3 { top: calc(50% + 128px); left: calc(50% + 160px); }
+            .module-4 { top: calc(50% + 198px); left: calc(50% - 32px); }
+            .module-5 { top: calc(50% - 40px); left: calc(50% - 204px); }
         }
 
-        @media (max-width: 540px) {
+        @media (max-width: 580px) {
             .circle-container {
-                width: 360px;
-                height: 360px;
+                width: 390px;
+                height: 390px;
             }
             
             .circle-title h1 {
@@ -453,30 +453,30 @@
             }
             
             .module-card {
-                width: 82px;
-                height: 92px;
-                padding: 8px 4px;
+                width: 86px;
+                height: 100px;
+                padding: 8px 5px;
                 border-radius: 12px;
             }
             
             .module-card .module-icon {
-                font-size: 1.1rem;
+                font-size: 1.15rem;
             }
             
             .module-card h3 {
-                font-size: 0.55rem;
+                font-size: 0.56rem;
             }
             
             .module-tag {
-                font-size: 0.46rem;
-                padding: 1px 4px;
+                font-size: 0.48rem;
+                padding: 1px 5px;
             }
 
-            .module-1 { top: calc(50% - 136px); }
-            .module-2 { top: calc(50% - 50px); left: calc(50% + 127px); }
-            .module-3 { top: calc(50% + 90px); left: calc(50% + 86px); }
-            .module-4 { top: calc(50% + 110px); left: calc(50% - 48px); }
-            .module-5 { top: calc(50% - 29px); left: calc(50% - 133px); }
+            .module-1 { top: calc(50% - 151px); }
+            .module-2 { top: calc(50% - 82px); left: calc(50% + 138px); }
+            .module-3 { top: calc(50% + 94px); left: calc(50% + 118px); }
+            .module-4 { top: calc(50% + 144px); left: calc(50% - 26px); }
+            .module-5 { top: calc(50% - 32px); left: calc(50% - 148px); }
         }
     </style>
 </head>
