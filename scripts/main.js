@@ -1,201 +1,278 @@
 // scripts/main.js - Fire Safety Laboratory
+// Core JavaScript for interactive fire safety education
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Element references
+    console.log('🔥 Fire Safety Laboratory initializing...');
+    
+    // ==================== ELEMENT REFERENCES ====================
+    
+    // Main elements
     const aiBubble = document.getElementById('aiBubble');
     const aiMessage = document.getElementById('aiMessage');
+    const circleContainer = document.getElementById('circleContainer');
+    const moduleCards = document.querySelectorAll('.module-card');
+    
+    // Module detail overlay
     const moduleDetail = document.getElementById('moduleDetail');
-    const subModuleDetail = document.getElementById('subModuleDetail');
-    const closeDetail = document.getElementById('closeDetail');
-    const closeSubDetail = document.getElementById('closeSubDetail');
-    const backToModule = document.getElementById('backToModule');
-    const moduleContent = document.getElementById('moduleContent');
     const moduleTitle = document.getElementById('moduleTitle');
+    const moduleContent = document.getElementById('moduleContent');
+    const closeDetail = document.getElementById('closeDetail');
+    
+    // Sub module overlay
+    const subModuleDetail = document.getElementById('subModuleDetail');
     const subTitle = document.getElementById('subTitle');
     const subContent = document.getElementById('subContent');
-    const nextLabBtn = document.getElementById('nextLabBtn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
+    const closeSubDetail = document.getElementById('closeSubDetail');
+    const backToModule = document.getElementById('backToModule');
     
-    // Chat interface elements
+    // Chat interface
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
     
-    // Current state
-    let currentState = 'main'; // main, module, subModule
+    // Navigation
+    const nextLabBtn = document.getElementById('nextLabBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // ==================== STATE MANAGEMENT ====================
+    
+    let currentState = 'main'; // 'main', 'module', 'subModule'
     let currentModule = null;
     let currentSubModule = null;
-    let aiChat = null;
+    let aiChatInstance = null;
+    let isProcessing = false;
     
-    // Module configuration
+    // ==================== MODULE CONFIGURATION ====================
+    
     const moduleConfig = {
         'fire-causes': {
             title: '🔥 Common Fire Causes',
-            description: 'Learn what starts fires at home and how to prevent them.',
-            subs: [
-                { id: 'overload', title: 'Electrical Overload', image: 'images/1.1.jpg', desc: 'Plugging too many devices into one outlet can cause overheating and fire.' },
-                { id: 'kitchen', title: 'Kitchen Oil Fire', image: 'images/1.2.jpg', desc: 'Unattended cooking oil can ignite quickly. Never leave the kitchen!' },
-                { id: 'ev-battery', title: 'EV Battery Charging', image: 'images/1.3.jpg', desc: 'Charging electric vehicles indoors is extremely dangerous.' },
-                { id: 'clutter', title: 'Cluttered Storage', image: 'images/1.4.jpg', desc: 'Piles of cardboard, paper, and fabric fuel fires rapidly.' },
-                { id: 'power-strip', title: 'Power Strip Overload', image: 'images/1.5.jpg', desc: 'Daisy-chaining power strips creates serious electrical hazards.' }
+            subtitle: 'Everyday fire risks at home',
+            description: 'Learn what starts fires in daily life and how to prevent them.',
+            scenes: [
+                { 
+                    id: 'overload', 
+                    title: 'Electrical Overload', 
+                    image: 'images/1.1.jpg',
+                    desc: 'Plugging too many high-power devices into one outlet can overheat wires and cause fire.',
+                    prevention: 'Use power strips with surge protection. Never plug multiple high-wattage appliances into one outlet.',
+                    aiPrompt: 'Explain why electrical overload causes fires and how to prevent it.'
+                },
+                { 
+                    id: 'kitchen', 
+                    title: 'Kitchen Oil Fire', 
+                    image: 'images/1.2.jpg',
+                    desc: 'Hot cooking oil can ignite in seconds if left unattended. Never leave the kitchen while frying!',
+                    prevention: 'Stay in the kitchen when cooking with oil. Keep a lid nearby to smother flames.',
+                    aiPrompt: 'Explain why kitchen oil fires happen and the correct way to handle them.'
+                },
+                { 
+                    id: 'ev-battery', 
+                    title: 'EV Battery Charging', 
+                    image: 'images/1.3.jpg',
+                    desc: 'Charging electric bikes or devices indoors can lead to battery fires from overheating.',
+                    prevention: 'Always charge batteries in open, ventilated areas. Use manufacturer-approved chargers.',
+                    aiPrompt: 'Explain the dangers of indoor battery charging and safety tips.'
+                },
+                { 
+                    id: 'clutter', 
+                    title: 'Cluttered Storage', 
+                    image: 'images/1.4.jpg',
+                    desc: 'Piles of cardboard, paper, old furniture, and fabrics near heat sources fuel fires rapidly.',
+                    prevention: 'Keep storage areas clean and organized. Store flammable items away from heaters and outlets.',
+                    aiPrompt: 'Explain how clutter contributes to fire spread and how to organize safely.'
+                },
+                { 
+                    id: 'power-strip', 
+                    title: 'Power Strip Overload', 
+                    image: 'images/1.5.jpg',
+                    desc: 'Daisy-chaining power strips or plugging heavy appliances into light-duty strips is very dangerous.',
+                    prevention: 'Plug high-power appliances directly into wall outlets. Never connect power strips in series.',
+                    aiPrompt: 'Explain the risks of power strip overload and proper usage guidelines.'
+                }
             ]
         },
         'smoke-basics': {
             title: '💨 Fire & Smoke Basics',
-            description: 'Understand why smoke is more deadly than flames.',
-            content: `<div class="smoke-info">
-                <div class="info-card">
-                    <h4>🔥 Flame Speed</h4>
-                    <p>A small flame can become a large fire in less than 30 seconds.</p>
-                </div>
-                <div class="info-card">
-                    <h4>💀 Smoke Kills Faster</h4>
-                    <p>Most fire deaths are caused by smoke inhalation, not burns. Smoke contains toxic gases that can incapacitate you in minutes.</p>
-                </div>
-                <div class="info-card">
-                    <h4>🌡️ Heat Danger</h4>
-                    <p>Temperatures in a fire can reach 600°C at eye level. Just one breath of superheated air can damage your lungs.</p>
-                </div>
-                <div class="info-card">
-                    <h4>⏰ Golden Time</h4>
-                    <p>You have approximately 3 minutes to escape a house fire. Every second counts!</p>
-                </div>
-            </div>`
+            subtitle: 'Why smoke kills faster than fire',
+            description: 'Understanding fire and smoke behavior can save your life.',
+            facts: [
+                {
+                    icon: '🔥',
+                    title: 'Flame Spread Speed',
+                    content: 'A small flame can become a large fire in less than 30 seconds. Fire doubles in size every minute.'
+                },
+                {
+                    icon: '💀',
+                    title: 'Smoke Kills Faster',
+                    content: 'Most fire deaths are caused by smoke inhalation, not burns. Toxic gases like carbon monoxide can incapacitate you in just 1-2 minutes.'
+                },
+                {
+                    icon: '🌡️',
+                    title: 'Heat Danger',
+                    content: 'Temperatures at eye level during a fire can reach 600°C (1112°F). One breath of superheated air can damage your lungs instantly.'
+                },
+                {
+                    icon: '⏰',
+                    title: 'Golden Escape Time',
+                    content: 'You typically have only 3 minutes to escape a house fire. Every second counts — have an escape plan ready.'
+                }
+            ],
+            aiPrompt: 'Explain why smoke is more dangerous than fire in simple terms for beginners.'
         },
         'extinguisher': {
             title: '🧯 Use a Fire Extinguisher',
-            description: 'Simple PASS method guide for using a dry chemical extinguisher.',
-            subs: [
-                { id: 'pull', title: 'PULL the Pin', image: 'images/2.1.jpg', desc: 'Pull the pin at the top of the extinguisher to break the seal.' },
-                { id: 'aim', title: 'AIM at the Base', image: 'images/2.2.jpg', desc: 'Aim the nozzle at the base of the fire, not the flames.' },
-                { id: 'squeeze', title: 'SQUEEZE the Handle', image: 'images/2.3.jpg', desc: 'Squeeze the handle slowly and evenly to release the agent.' },
-                { id: 'sweep', title: 'SWEEP Side to Side', image: 'images/2.4.jpg', desc: 'Sweep the nozzle from side to side until the fire is out.' }
-            ]
+            subtitle: 'Simple PASS method guide',
+            description: 'Learn the 4 simple steps to use a dry chemical fire extinguisher.',
+            steps: [
+                {
+                    id: 'pull',
+                    title: 'PULL the Pin',
+                    image: 'images/2.1.jpg',
+                    desc: 'Pull the pin at the top of the extinguisher to break the tamper seal.',
+                    detail: 'Hold the extinguisher firmly. Pull the ring pin straight out. This unlocks the handle.'
+                },
+                {
+                    id: 'aim',
+                    title: 'AIM at the Base',
+                    image: 'images/2.2.jpg',
+                    desc: 'Aim the nozzle at the base of the fire, NOT at the flames.',
+                    detail: 'The base is where the fuel source is. Aiming at flames wastes extinguishing agent.'
+                },
+                {
+                    id: 'squeeze',
+                    title: 'SQUEEZE the Handle',
+                    image: 'images/2.3.jpg',
+                    desc: 'Squeeze the handle slowly and evenly to release the extinguishing agent.',
+                    detail: 'Stand 6-8 feet away. Squeeze gently at first, then increase pressure steadily.'
+                },
+                {
+                    id: 'sweep',
+                    title: 'SWEEP Side to Side',
+                    image: 'images/2.4.jpg',
+                    desc: 'Sweep the nozzle from side to side until the fire is completely out.',
+                    detail: 'Move slowly and deliberately. Watch for re-ignition after extinguishing.'
+                }
+            ],
+            aiPrompt: 'Teach the PASS method for using a fire extinguisher in simple steps.'
         },
         'misconceptions': {
             title: '❌ Common Misconceptions',
-            description: 'Debunk popular fire myths that could cost lives.',
-            items: [
-                { myth: 'Water puts out all fires.', fact: 'NEVER use water on grease fires or electrical fires. Water spreads grease fires and conducts electricity.' },
-                { myth: 'Open windows for fresh air during a fire.', fact: 'Opening windows feeds oxygen to the fire, making it grow faster. Close doors and windows.' },
-                { myth: 'Elevators are safe for escape.', fact: 'Elevators can trap you if power fails or act as chimneys for smoke. Always use stairs.' },
-                { myth: 'A little smoke is harmless.', fact: 'Even small amounts of smoke contain carbon monoxide and toxic chemicals that harm your health.' }
-            ]
+            subtitle: 'Debunk popular fire myths',
+            description: 'These dangerous myths could cost lives. Learn the truth!',
+            myths: [
+                {
+                    myth: 'Water puts out all fires.',
+                    truth: 'NEVER use water on grease fires or electrical fires! Water makes grease fires explode and conducts electricity, causing shocks.',
+                    icon: '💧'
+                },
+                {
+                    myth: 'Open windows during a fire for fresh air.',
+                    truth: 'Opening windows feeds oxygen to the fire, making it grow much faster. Always close doors and windows behind you.',
+                    icon: '🪟'
+                },
+                {
+                    myth: 'Elevators are safe to use during a fire.',
+                    truth: 'Elevators can trap you if power fails. They also act like chimneys, filling with smoke. Always use stairs!',
+                    icon: '🛗'
+                },
+                {
+                    myth: 'A little smoke is harmless.',
+                    truth: 'Even small amounts of smoke contain carbon monoxide and toxic chemicals. If you see or smell smoke, get out immediately!',
+                    icon: '💭'
+                }
+            ],
+            aiPrompt: 'Explain why these common fire safety myths are dangerous and what the correct actions are.'
         },
-        'first-aid': {
-            title: '🏥 Emergency First Aid',
-            description: 'Basic treatment for minor burns and smoke inhalation.',
-            content: `<div class="first-aid-guide">
-                <h4>For Minor Burns:</h4>
-                <ol>
-                    <li><strong>Cool</strong> the burn under cool running water for 10-20 minutes</li>
-                    <li><strong>Remove</strong> jewelry or tight items near the burned area</li>
-                    <li><strong>Cover</strong> with a sterile gauze bandage loosely</li>
-                    <li><strong>Do NOT</strong> apply ice, butter, or toothpaste</li>
-                </ol>
-                <h4>For Smoke Inhalation:</h4>
-                <ol>
-                    <li><strong>Move</strong> to fresh air immediately</li>
-                    <li><strong>Sit upright</strong> to help breathing</li>
-                    <li><strong>Call emergency services</strong> if coughing persists</li>
-                    <li><strong>Watch for symptoms</strong>: dizziness, confusion, blue lips</li>
-                </ol>
-                <p class="warning">⚠️ For severe burns or difficulty breathing, seek medical help immediately!</p>
-            </div>`
-        },
-        'emergency-call': {
-            title: '📞 Emergency Call Guide',
-            description: 'Practice reporting a fire clearly and calmly.',
-            content: `<div class="call-guide">
-                <h4>When calling emergency services:</h4>
-                <div class="call-steps">
-                    <p><strong>1. Stay calm</strong> — Take a deep breath before speaking</p>
-                    <p><strong>2. Give your location</strong> — Address, building, floor, room number</p>
-                    <p><strong>3. Describe the emergency</strong> — What is burning? How big is the fire?</p>
-                    <p><strong>4. Report people</strong> — Is anyone trapped or injured?</p>
-                    <p><strong>5. Follow instructions</strong> — Do what the operator says</p>
-                </div>
-                <div class="practice-section">
-                    <h4>🎯 Practice with AI:</h4>
-                    <p>Ask Dr. Qian to simulate an emergency call scenario with you!</p>
-                </div>
-            </div>`
-        },
-        'quiz': {
-            title: '📝 Fire Safety Quiz',
-            description: 'Test your knowledge with a quick quiz!',
-            questions: [
-                { q: 'What should you do if a grease fire starts in the kitchen?', options: ['Pour water on it', 'Cover with a lid', 'Fan it with a towel', 'Run away'], correct: 1 },
-                { q: 'Why is smoke more dangerous than fire?', options: ['It smells bad', 'It blocks vision', 'It contains toxic gases', 'It makes you cough'], correct: 2 },
-                { q: 'What does the P in PASS stand for?', options: ['Push', 'Pull', 'Press', 'Point'], correct: 1 },
-                { q: 'Should you use an elevator during a fire?', options: ['Yes, it\'s faster', 'No, use stairs', 'Only if ground floor', 'If no smoke'], correct: 1 },
-                { q: 'How long do you typically have to escape a house fire?', options: ['10 minutes', '3 minutes', '1 minute', '30 seconds'], correct: 1 }
-            ]
-        },
-        'qa': {
-            title: '💬 Free Q&A',
-            description: 'Ask anything about fire safety. Dr. Qian will answer!',
-            content: `<div class="qa-welcome">
-                <h4>🤖 Ask Dr. Qian Anything About Fire Safety!</h4>
-                <p>Examples:</p>
-                <ul>
-                    <li>"How do I prevent electrical fires at home?"</li>
-                    <li>"What should I do if my clothes catch fire?"</li>
-                    <li>"Is it safe to use extension cords permanently?"</li>
-                    <li>"How often should I replace my smoke detector?"</li>
-                </ul>
-                <p class="hint">Type your question below and press "Ask AI"!</p>
-            </div>`
+        'emergency': {
+            title: '🏥 Emergency & First Aid',
+            subtitle: 'Burn care & emergency call guide',
+            description: 'Know what to do in a fire emergency — it could save a life.',
+            sections: [
+                {
+                    id: 'burn-care',
+                    title: '🔥 Minor Burn Care',
+                    icon: '🩹',
+                    steps: [
+                        'Cool the burn under cool running water for 10-20 minutes',
+                        'Remove jewelry or tight items near the burned area',
+                        'Cover loosely with a sterile gauze bandage',
+                        'Take over-the-counter pain reliever if needed',
+                        'NEVER apply ice, butter, toothpaste, or ointments'
+                    ],
+                    warning: 'For severe burns (larger than palm, blistering, charred skin), seek immediate medical help!'
+                },
+                {
+                    id: 'smoke-inhalation',
+                    title: '💨 Smoke Inhalation',
+                    icon: '😮‍💨',
+                    steps: [
+                        'Move to fresh air immediately',
+                        'Sit upright to help breathing',
+                        'Loosen tight clothing around neck',
+                        'If coughing persists, call emergency services',
+                        'Watch for symptoms: dizziness, confusion, blue lips'
+                    ],
+                    warning: 'If person is unconscious or not breathing, call emergency services immediately!'
+                },
+                {
+                    id: 'emergency-call',
+                    title: '📞 Making an Emergency Call',
+                    icon: '📱',
+                    steps: [
+                        'Stay calm — take a deep breath before speaking',
+                        'Give your exact location: address, building, floor, room number',
+                        'Describe what is burning and how big the fire is',
+                        'Report any people trapped or injured',
+                        'Follow the operator\'s instructions carefully',
+                        'Do NOT hang up until told to do so'
+                    ],
+                    warning: 'Practice with Dr. Qian! Ask him to simulate an emergency call with you.'
+                }
+            ],
+            aiPrompt: 'Guide users on basic fire first aid and how to make an emergency call.'
         }
     };
     
     // ==================== INITIALIZATION ====================
     
     function init() {
-        console.log('Initializing Fire Safety Laboratory...');
+        console.log('🔥 Initializing Fire Safety Laboratory...');
         
-        setTimeout(() => {
-            showWelcomeMessage();
-        }, 500);
+        // Setup event listeners
+        setupEventListeners();
         
-        setTimeout(() => {
-            setupEventListeners();
-        }, 1000);
+        // Initialize AI chat
+        initAIChat();
         
-        setTimeout(() => {
-            initAIChat();
-        }, 1500);
+        // Show welcome message
+        setTimeout(showWelcomeMessage, 500);
         
-        setTimeout(() => {
-            if (loadingOverlay) {
-                loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    loadingOverlay.style.display = 'none';
-                }, 500);
-            }
-        }, 2000);
+        // Hide loading overlay
+        setTimeout(hideLoading, 2000);
+        
+        console.log('✅ Fire Safety Laboratory initialized successfully');
     }
     
     // ==================== EVENT LISTENERS ====================
     
     function setupEventListeners() {
-        console.log('Setting up event listeners...');
-        
         // Module card clicks
-        document.querySelectorAll('.module-card').forEach(card => {
+        moduleCards.forEach(card => {
             card.addEventListener('click', () => {
-                const module = card.dataset.module;
+                const module = card.getAttribute('data-module');
                 if (module && currentState === 'main') {
                     showModuleDetail(module);
                 }
             });
         });
         
-        // Close detail
+        // Close module detail
         if (closeDetail) {
             closeDetail.addEventListener('click', closeModuleDetail);
         }
         
-        // Close sub detail
+        // Close sub module detail
         if (closeSubDetail) {
             closeSubDetail.addEventListener('click', closeSubModuleDetail);
         }
@@ -209,19 +286,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // Next lab button
-        if (nextLabBtn) {
-            nextLabBtn.addEventListener('click', () => {
-                alert('Next laboratory coming soon!');
-            });
-        }
-        
-        // Chat send button
+        // Send message
         if (sendBtn) {
             sendBtn.addEventListener('click', sendMessage);
         }
         
-        // Enter key to send message
+        // Enter key to send
         if (userInput) {
             userInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -230,15 +300,49 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        console.log('Event listeners set up successfully');
+        // Next lab button
+        if (nextLabBtn) {
+            nextLabBtn.addEventListener('click', () => {
+                // Will be updated with actual URL later
+                alert('Next laboratory coming soon!');
+            });
+        }
+        
+        // Close overlays on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (currentState === 'subModule') {
+                    closeSubModuleDetail();
+                } else if (currentState === 'module') {
+                    closeModuleDetail();
+                }
+            }
+        });
+        
+        // Close overlays on background click
+        if (moduleDetail) {
+            moduleDetail.addEventListener('click', (e) => {
+                if (e.target === moduleDetail) {
+                    closeModuleDetail();
+                }
+            });
+        }
+        
+        if (subModuleDetail) {
+            subModuleDetail.addEventListener('click', (e) => {
+                if (e.target === subModuleDetail) {
+                    closeSubModuleDetail();
+                }
+            });
+        }
+        
+        console.log('✅ Event listeners set up');
     }
     
-    // ==================== AI CHAT ====================
+    // ==================== AI CHAT SYSTEM ====================
     
     function initAIChat() {
-        console.log('Initializing AI chat...');
-        
-        aiChat = {
+        aiChatInstance = {
             currentModule: null,
             chatHistory: [],
             
@@ -252,95 +356,95 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${sender}`;
-                messageDiv.innerHTML = `<p>${this.escapeHtml(content)}</p>`;
-                
-                const timeDiv = document.createElement('div');
-                timeDiv.className = 'message-time';
-                timeDiv.textContent = new Date().toLocaleTimeString([], { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-                messageDiv.appendChild(timeDiv);
+                messageDiv.innerHTML = `
+                    <p>${escapeHtml(content)}</p>
+                    <div class="message-time">${getCurrentTime()}</div>
+                `;
                 
                 chatMessages.appendChild(messageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             },
             
             sendMessage: async function(message) {
+                if (isProcessing) return;
+                isProcessing = true;
+                
                 this.addMessage(message, 'user');
                 if (sendBtn) sendBtn.disabled = true;
+                if (userInput) userInput.disabled = true;
                 
                 try {
                     const response = await this.callAI(message);
                     this.addMessage(response, 'ai');
                 } catch (error) {
                     console.error('AI Error:', error);
-                    this.addMessage("I apologize, but I'm having trouble connecting right now. Please try again.", 'ai');
+                    this.addMessage(getFallbackResponse(this.currentModule), 'ai');
                 } finally {
+                    isProcessing = false;
                     if (sendBtn) sendBtn.disabled = false;
-                    if (userInput) userInput.focus();
+                    if (userInput) {
+                        userInput.disabled = false;
+                        userInput.focus();
+                    }
                 }
             },
             
             callAI: async function(message) {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        type: 'question',
-                        module: this.currentModule,
-                        message: message,
-                        history: this.chatHistory.slice(-5)
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.status}`);
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            type: 'question',
+                            module: this.currentModule,
+                            message: message,
+                            history: this.chatHistory.slice(-5)
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    this.chatHistory.push({ role: 'user', content: message });
+                    this.chatHistory.push({ role: 'assistant', content: data.content });
+                    
+                    return data.content;
+                } catch (error) {
+                    console.error('API call failed:', error);
+                    throw error;
                 }
-                
-                const data = await response.json();
-                
-                this.chatHistory.push({ 
-                    role: 'user', 
-                    content: message 
-                });
-                this.chatHistory.push({ 
-                    role: 'assistant', 
-                    content: data.content 
-                });
-                
-                return data.content;
-            },
-            
-            escapeHtml: function(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
             }
         };
         
-        console.log('AI chat initialized successfully');
+        console.log('✅ AI Chat system initialized');
     }
     
     // ==================== SEND MESSAGE ====================
     
     function sendMessage() {
-        if (!userInput || !aiChat) return;
+        if (!userInput || !aiChatInstance || isProcessing) return;
         
         const message = userInput.value.trim();
         if (!message) return;
         
         userInput.value = '';
         
-        if (aiChat && currentModule) {
-            aiChat.sendMessage(message);
+        if (currentModule) {
+            aiChatInstance.sendMessage(message);
         } else {
+            // If no module selected, add a temporary message
             if (chatMessages) {
                 const tempMsg = document.createElement('div');
                 tempMsg.className = 'message ai';
-                tempMsg.innerHTML = '<p>Please select a module first to start asking questions.</p>';
+                tempMsg.innerHTML = `
+                    <p>Please select a module first by clicking one of the circular buttons above. Then I can help you with specific fire safety topics!</p>
+                    <div class="message-time">${getCurrentTime()}</div>
+                `;
                 chatMessages.appendChild(tempMsg);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
@@ -350,193 +454,289 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==================== WELCOME MESSAGE ====================
     
     function showWelcomeMessage() {
-        console.log('Showing welcome message...');
-        
         if (aiMessage) {
-            aiMessage.textContent = "Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen. Click any module to learn about fire prevention and safety!";
+            aiMessage.textContent = "Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen. Click any module around the circle to learn about fire prevention and safety!";
         }
         
-        setTimeout(() => {
-            if (aiBubble) {
-                aiBubble.style.animation = 'none';
-                setTimeout(() => {
-                    aiBubble.style.animation = 'bubbleAppear 0.5s';
-                }, 10);
-            }
-        }, 500);
-        
-        console.log('Welcome message displayed');
+        // Re-trigger bubble animation
+        if (aiBubble) {
+            aiBubble.style.animation = 'none';
+            setTimeout(() => {
+                aiBubble.style.animation = 'bubbleAppear 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
+            }, 10);
+        }
     }
     
     // ==================== SHOW MODULE DETAIL ====================
     
     function showModuleDetail(module) {
-        console.log('Showing module detail:', module);
+        console.log(`📖 Opening module: ${module}`);
         currentState = 'module';
         currentModule = module;
         
         const config = moduleConfig[module];
-        if (!config) return;
-        
-        if (moduleTitle) {
-            moduleTitle.textContent = config.title;
+        if (!config) {
+            console.error(`Module config not found: ${module}`);
+            return;
         }
         
+        // Set title
+        if (moduleTitle) {
+            moduleTitle.textContent = `${config.title} — ${config.subtitle}`;
+        }
+        
+        // Generate content
+        if (moduleContent) {
+            moduleContent.innerHTML = generateModuleHTML(module);
+        }
+        
+        // Show overlay
         if (moduleDetail) {
             moduleDetail.style.display = 'flex';
         }
         
         // Set AI chat module
-        if (aiChat) {
-            aiChat.setModule(module);
+        if (aiChatInstance) {
+            aiChatInstance.setModule(module);
         }
         
-        // Generate content based on module type
-        generateModuleContent(module);
-        
-        // Clear chat
+        // Clear chat and add welcome message
         if (chatMessages) {
             chatMessages.innerHTML = '';
         }
         
-        // Add welcome message
         setTimeout(() => {
-            if (aiChat) {
-                aiChat.addMessage(`Welcome to "${config.title}"! I'm Dr. Qian. What would you like to know about this topic?`, 'ai');
+            if (aiChatInstance) {
+                aiChatInstance.addMessage(`Welcome to "${config.title}"! I'm Dr. Qian. What would you like to learn about this topic?`, 'ai');
             }
-        }, 800);
+        }, 600);
         
-        console.log('Module detail displayed');
+        // Attach event listeners for sub-items
+        setTimeout(() => {
+            attachSubItemListeners(module);
+        }, 100);
     }
     
-    // ==================== GENERATE MODULE CONTENT ====================
+    // ==================== GENERATE MODULE HTML ====================
     
-    function generateModuleContent(module) {
+    function generateModuleHTML(module) {
         const config = moduleConfig[module];
-        if (!moduleContent || !config) return;
+        if (!config) return '<p>Module content not available.</p>';
         
-        let html = '';
+        let html = `<div class="module-description"><p>${config.description}</p></div>`;
         
         switch(module) {
             case 'fire-causes':
-                html = `<div class="module-intro"><p>${config.description}</p></div>
-                <div class="sub-modules-grid">
-                    ${config.subs.map((sub, index) => `
-                        <div class="sub-module-item" data-sub="${sub.id}" data-module="${module}">
-                            <img src="${sub.image}" alt="${sub.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22150%22><rect fill=%22%23ff8c00%22 width=%22200%22 height=%22150%22/><text fill=%22white%22 font-size=%2220%22 x=%2250%22 y=%2280%22>${sub.title}</text></svg>'">
-                            <h4>${index + 1}. ${sub.title}</h4>
-                            <p>${sub.desc}</p>
-                            <span class="click-hint">Click for AI explanation →</span>
-                        </div>
-                    `).join('')}
-                </div>`;
+                html += `
+                    <div class="scene-grid">
+                        ${config.scenes.map((scene, index) => `
+                            <div class="scene-card" data-scene="${scene.id}" data-module="${module}">
+                                <div class="scene-number">${index + 1}</div>
+                                <img src="${scene.image}" alt="${scene.title}" 
+                                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22150%22><rect fill=%22%23ff8c00%22 width=%22200%22 height=%22150%22/><text fill=%22white%22 font-size=%2218%22 x=%2230%22 y=%2280%22>${scene.title}</text></svg>'">
+                                <h4>${scene.title}</h4>
+                                <p>${scene.desc}</p>
+                                <span class="click-hint">👆 Click for AI explanation</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
+                
+            case 'smoke-basics':
+                html += `
+                    <div class="facts-grid">
+                        ${config.facts.map(fact => `
+                            <div class="fact-card">
+                                <div class="fact-icon">${fact.icon}</div>
+                                <h4>${fact.title}</h4>
+                                <p>${fact.content}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="ai-prompt-section">
+                        <p>💡 <strong>Ask Dr. Qian:</strong> "${config.aiPrompt}"</p>
+                    </div>
+                `;
                 break;
                 
             case 'extinguisher':
-                html = `<div class="module-intro"><p>${config.description}</p></div>
-                <div class="pass-steps">
-                    ${config.subs.map((sub, index) => `
-                        <div class="pass-step" data-sub="${sub.id}" data-module="${module}">
-                            <div class="step-number">${index + 1}</div>
-                            <img src="${sub.image}" alt="${sub.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22150%22><rect fill=%22%23ff6347%22 width=%22200%22 height=%22150%22/><text fill=%22white%22 font-size=%2220%22 x=%2250%22 y=%2280%22>${sub.title}</text></svg>'">
-                            <h4>${sub.title}</h4>
-                            <p>${sub.desc}</p>
-                            <span class="click-hint">Click for details →</span>
-                        </div>
-                    `).join('')}
-                </div>`;
+                html += `
+                    <div class="steps-grid">
+                        ${config.steps.map((step, index) => `
+                            <div class="step-card" data-step="${step.id}" data-module="${module}">
+                                <div class="step-badge">Step ${index + 1}</div>
+                                <div class="step-letter">${step.title.charAt(0)}</div>
+                                <img src="${step.image}" alt="${step.title}"
+                                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22100%22><rect fill=%22%23ff6347%22 width=%22150%22 height=%22100%22/><text fill=%22white%22 font-size=%2216%22 x=%2230%22 y=%2255%22>${step.title}</text></svg>'">
+                                <h4>${step.title}</h4>
+                                <p>${step.desc}</p>
+                                <span class="click-hint">👆 Learn more</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="pass-summary">
+                        <p><strong>Remember PASS:</strong> <span class="pass-word">P</span>ull · <span class="pass-word">A</span>im · <span class="pass-word">S</span>queeze · <span class="pass-word">S</span>weep</p>
+                    </div>
+                `;
                 break;
                 
             case 'misconceptions':
-                html = `<div class="module-intro"><p>${config.description}</p></div>
-                <div class="myths-list">
-                    ${config.items.map((item, index) => `
-                        <div class="myth-item">
-                            <div class="myth-badge">Myth ${index + 1}</div>
-                            <h4>❌ "${item.myth}"</h4>
-                            <p>✅ <strong>Truth:</strong> ${item.fact}</p>
-                        </div>
-                    `).join('')}
-                </div>`;
-                break;
-                
-            case 'quiz':
-                html = `<div class="module-intro"><p>${config.description}</p></div>
-                <div class="quiz-container" id="quizContainer">
-                    ${config.questions.map((q, index) => `
-                        <div class="quiz-question" data-q="${index}">
-                            <h4>Q${index + 1}: ${q.q}</h4>
-                            <div class="quiz-options">
-                                ${q.options.map((opt, optIndex) => `
-                                    <label class="quiz-option">
-                                        <input type="radio" name="q${index}" value="${optIndex}">
-                                        <span>${opt}</span>
-                                    </label>
-                                `).join('')}
+                html += `
+                    <div class="myths-list">
+                        ${config.myths.map((myth, index) => `
+                            <div class="myth-card">
+                                <div class="myth-header">
+                                    <span class="myth-icon">${myth.icon}</span>
+                                    <span class="myth-label">Myth ${index + 1}</span>
+                                </div>
+                                <div class="myth-statement">
+                                    <span class="myth-mark">❌</span>
+                                    <p>"${myth.myth}"</p>
+                                </div>
+                                <div class="truth-statement">
+                                    <span class="truth-mark">✅</span>
+                                    <p><strong>Truth:</strong> ${myth.truth}</p>
+                                </div>
                             </div>
-                            <div class="quiz-result" id="result${index}"></div>
-                        </div>
-                    `).join('')}
-                    <button class="quiz-submit-btn" id="submitQuiz">Submit Answers</button>
-                    <div class="quiz-score" id="quizScore"></div>
-                </div>`;
+                        `).join('')}
+                    </div>
+                `;
                 break;
                 
-            default:
-                html = `<div class="module-intro"><p>${config.description}</p></div>
-                <div class="module-default-content">${config.content || ''}</div>`;
+            case 'emergency':
+                html += `
+                    <div class="sections-list">
+                        ${config.sections.map(section => `
+                            <div class="section-card" data-section="${section.id}" data-module="${module}">
+                                <div class="section-header">
+                                    <span class="section-icon">${section.icon}</span>
+                                    <h4>${section.title}</h4>
+                                </div>
+                                <ol class="section-steps">
+                                    ${section.steps.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                                <div class="section-warning">
+                                    ⚠️ ${section.warning}
+                                </div>
+                                <span class="click-hint">👆 Ask Dr. Qian</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
         }
         
-        moduleContent.innerHTML = html;
-        
-        // Attach event listeners for sub-module items
-        attachSubModuleListeners(module);
-        
-        // Attach quiz listener
-        if (module === 'quiz') {
-            attachQuizListener();
-        }
+        return html;
     }
     
-    // ==================== ATTACH SUB MODULE LISTENERS ====================
+    // ==================== ATTACH SUB ITEM LISTENERS ====================
     
-    function attachSubModuleListeners(module) {
+    function attachSubItemListeners(module) {
         const config = moduleConfig[module];
-        if (!config || !config.subs) return;
+        if (!config) return;
         
-        document.querySelectorAll('.sub-module-item, .pass-step').forEach(item => {
-            item.addEventListener('click', () => {
-                const subId = item.dataset.sub;
-                const parentModule = item.dataset.module;
-                const subConfig = moduleConfig[parentModule].subs.find(s => s.id === subId);
-                if (subConfig) {
-                    showSubModule(subConfig, parentModule);
+        // Fire causes scene cards
+        document.querySelectorAll('.scene-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const sceneId = card.dataset.scene;
+                const scene = config.scenes.find(s => s.id === sceneId);
+                if (scene) {
+                    showSceneDetail(scene, module);
+                }
+            });
+        });
+        
+        // Extinguisher step cards
+        document.querySelectorAll('.step-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const stepId = card.dataset.step;
+                const step = config.steps.find(s => s.id === stepId);
+                if (step) {
+                    showStepDetail(step, module);
+                }
+            });
+        });
+        
+        // Emergency section cards
+        document.querySelectorAll('.section-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const sectionId = card.dataset.section;
+                const section = config.sections.find(s => s.id === sectionId);
+                if (section) {
+                    showSectionDetail(section, module);
                 }
             });
         });
     }
     
-    // ==================== SHOW SUB MODULE ====================
+    // ==================== SHOW SUB DETAILS ====================
     
-    function showSubModule(subConfig, parentModule) {
-        console.log('Showing sub module:', subConfig.id);
+    function showSceneDetail(scene, module) {
         currentState = 'subModule';
-        currentSubModule = subConfig.id;
+        currentSubModule = scene.id;
         
         if (subTitle) {
-            subTitle.textContent = subConfig.title;
+            subTitle.textContent = `🔥 ${scene.title}`;
         }
         
         if (subContent) {
             subContent.innerHTML = `
-                <div class="sub-module-detail">
-                    <img src="${subConfig.image}" alt="${subConfig.title}" class="sub-module-image" onerror="this.style.display='none'">
-                    <div class="sub-module-text">
-                        <h3>${subConfig.title}</h3>
-                        <p>${subConfig.desc}</p>
-                        <div class="ai-explain-section">
-                            <h4>🤖 Ask Dr. Qian:</h4>
-                            <p>Want to learn more? Type your question in the chat below!</p>
+                <div class="sub-detail">
+                    <img src="${scene.image}" alt="${scene.title}" class="sub-image"
+                         onerror="this.style.display='none'">
+                    <div class="sub-text">
+                        <h3>${scene.title}</h3>
+                        <p class="sub-description">${scene.desc}</p>
+                        <div class="prevention-box">
+                            <h4>🛡️ Prevention Tips</h4>
+                            <p>${scene.prevention}</p>
+                        </div>
+                        <div class="ai-question-box">
+                            <h4>🤖 Ask Dr. Qian</h4>
+                            <p>Click "Ask AI" below and type: <em>"${scene.aiPrompt}"</em></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (subModuleDetail) {
+            subModuleDetail.style.display = 'flex';
+        }
+        
+        // Send AI prompt automatically
+        if (aiChatInstance && chatMessages) {
+            chatMessages.innerHTML = '';
+            setTimeout(() => {
+                aiChatInstance.sendMessage(scene.aiPrompt);
+            }, 500);
+        }
+    }
+    
+    function showStepDetail(step, module) {
+        currentState = 'subModule';
+        currentSubModule = step.id;
+        
+        if (subTitle) {
+            subTitle.textContent = `🧯 ${step.title}`;
+        }
+        
+        if (subContent) {
+            subContent.innerHTML = `
+                <div class="sub-detail">
+                    <img src="${step.image}" alt="${step.title}" class="sub-image"
+                         onerror="this.style.display='none'">
+                    <div class="sub-text">
+                        <h3>${step.title}</h3>
+                        <p class="sub-description">${step.detail}</p>
+                        <div class="tip-box">
+                            <h4>💡 Pro Tip</h4>
+                            <p>${step.desc}</p>
+                        </div>
+                        <div class="ai-question-box">
+                            <h4>🤖 Practice with Dr. Qian</h4>
+                            <p>Ask: <em>"Can you walk me through the ${step.title.toLowerCase()} step?"</em></p>
                         </div>
                     </div>
                 </div>
@@ -548,10 +748,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // ==================== CLOSE MODULE DETAIL ====================
+    function showSectionDetail(section, module) {
+        currentState = 'subModule';
+        currentSubModule = section.id;
+        
+        if (subTitle) {
+            subTitle.textContent = `${section.icon} ${section.title}`;
+        }
+        
+        if (subContent) {
+            subContent.innerHTML = `
+                <div class="sub-detail">
+                    <div class="sub-text">
+                        <h3>${section.title}</h3>
+                        <div class="steps-list">
+                            <h4>Steps to follow:</h4>
+                            <ol>
+                                ${section.steps.map(step => `<li>${step}</li>`).join('')}
+                            </ol>
+                        </div>
+                        <div class="warning-box">
+                            <h4>⚠️ Important Warning</h4>
+                            <p>${section.warning}</p>
+                        </div>
+                        <div class="ai-question-box">
+                            <h4>🤖 Practice with Dr. Qian</h4>
+                            <p>Ask: <em>"Can you help me practice what to say in an emergency call?"</em></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (subModuleDetail) {
+            subModuleDetail.style.display = 'flex';
+        }
+    }
+    
+    // ==================== CLOSE FUNCTIONS ====================
     
     function closeModuleDetail() {
-        console.log('Closing module detail...');
+        console.log('Closing module detail');
         currentState = 'main';
         currentModule = null;
         
@@ -568,14 +805,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (aiMessage) {
-            aiMessage.textContent = "Welcome back! Click any module to learn about fire safety.";
+            aiMessage.textContent = "Welcome back! Click any module around the circle to continue learning about fire safety.";
         }
     }
     
-    // ==================== CLOSE SUB MODULE DETAIL ====================
-    
     function closeSubModuleDetail() {
-        console.log('Closing sub module detail...');
+        console.log('Closing sub module detail');
         currentState = 'module';
         currentSubModule = null;
         
@@ -584,66 +819,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // ==================== QUIZ FUNCTIONALITY ====================
+    // ==================== LOADING ====================
     
-    function attachQuizListener() {
-        const submitBtn = document.getElementById('submitQuiz');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', evaluateQuiz);
+    function hideLoading() {
+        if (loadingOverlay) {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 500);
         }
     }
     
-    function evaluateQuiz() {
-        const config = moduleConfig['quiz'];
-        if (!config) return;
-        
-        let score = 0;
-        
-        config.questions.forEach((q, index) => {
-            const selected = document.querySelector(`input[name="q${index}"]:checked`);
-            const resultDiv = document.getElementById(`result${index}`);
-            
-            if (selected) {
-                const answer = parseInt(selected.value);
-                if (answer === q.correct) {
-                    score++;
-                    if (resultDiv) {
-                        resultDiv.innerHTML = '<span class="correct">✅ Correct!</span>';
-                        resultDiv.style.color = '#4CAF50';
-                    }
-                } else {
-                    if (resultDiv) {
-                        resultDiv.innerHTML = `<span class="wrong">❌ Wrong. Correct answer: ${q.options[q.correct]}</span>`;
-                        resultDiv.style.color = '#FF5252';
-                    }
-                }
-            } else {
-                if (resultDiv) {
-                    resultDiv.innerHTML = '<span class="no-answer">⚠️ Please select an answer</span>';
-                    resultDiv.style.color = '#FF9800';
-                }
-            }
+    // ==================== UTILITY FUNCTIONS ====================
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function getCurrentTime() {
+        return new Date().toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit' 
         });
+    }
+    
+    function getFallbackResponse(module) {
+        const fallbacks = {
+            'fire-causes': "Common fire causes include electrical overload, kitchen accidents, and improper battery charging. The key is prevention: don't overload outlets, never leave cooking unattended, and charge devices in open areas. What specific situation concerns you?",
+            'smoke-basics': "Smoke is actually more dangerous than fire because it contains toxic gases like carbon monoxide. Most fire deaths are from smoke inhalation, not burns. That's why staying low and crawling to exit is so important. Would you like to know more?",
+            'extinguisher': "The PASS method is simple: Pull the pin, Aim at the base, Squeeze the handle, Sweep side to side. Remember: only fight small fires. If the fire grows, get out and call for help. Which step would you like me to explain more?",
+            'misconceptions': "One of the biggest myths is that water works on all fires. Actually, water makes grease fires explode and conducts electricity in electrical fires. Always use a lid for grease fires and a Class C extinguisher for electrical ones. What other myths have you heard?",
+            'emergency': "For minor burns, cool under running water for 10-20 minutes. Never use ice or butter! For smoke inhalation, get to fresh air immediately. When calling for help, stay calm and give your exact location first. What specific situation are you preparing for?"
+        };
         
-        const scoreDiv = document.getElementById('quizScore');
-        if (scoreDiv) {
-            const percentage = Math.round((score / config.questions.length) * 100);
-            let grade = '';
-            if (percentage >= 80) grade = '🌟 Excellent! You are fire-safe!';
-            else if (percentage >= 60) grade = '👍 Good! But review the topics you missed.';
-            else grade = '📚 Keep learning! Review the modules above.';
-            
-            scoreDiv.innerHTML = `
-                <div class="score-card">
-                    <h3>Your Score: ${score}/${config.questions.length} (${percentage}%)</h3>
-                    <p>${grade}</p>
-                </div>
-            `;
-        }
+        return fallbacks[module] || "Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen. I'm here to help you learn about fire safety in simple terms. What would you like to know?";
     }
     
     // ==================== START APPLICATION ====================
     
     init();
-    console.log('Fire Safety Laboratory initialized successfully');
+    console.log('🔥 Fire Safety Laboratory fully loaded');
 });
