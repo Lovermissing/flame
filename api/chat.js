@@ -1,4 +1,4 @@
-// api/chat.js - Fire Safety Laboratory AI
+// api/chat.js - Fire Science Laboratory AI
 // Powered by iFlytek Spark (xop35qwen2b) - Dr. Qian Xuesen Fire Safety Educator
 
 import OpenAI from 'openai';
@@ -36,7 +36,7 @@ LANGUAGE GUIDELINES:
 - End with an engaging question to encourage further discussion
 
 YOUR ROLE:
-You're guiding visitors through the Fire Safety Laboratory at USTC. Your goal is to teach basic fire safety knowledge to ordinary people (students, residents, office workers). Make fire safety accessible and memorable for everyone.`;
+You're guiding visitors through the Fire Science Laboratory at USTC. Your goal is to teach basic fire safety knowledge to ordinary people (students, residents, office workers). Make fire safety accessible and memorable for everyone.`;
 
 // ==================== WELCOME MESSAGE ====================
 // （完全不动）
@@ -386,7 +386,7 @@ For EMERGENCY CALLS:
 Would you like to practice making an emergency call with me? I can simulate the operator!`
   };
 
-  return fallbacks[module] || `Hello! I'm Dr. Qian Xuesen from the USTC Fire Safety Laboratory. 
+  return fallbacks[module] || `Hello! I'm Dr. Qian Xuesen from the USTC Fire Science Laboratory. 
 
 I'm here to help you learn about fire safety in simple, practical ways. Whether you want to know about preventing fires, using a fire extinguisher, or what to do in an emergency — just ask!
 
