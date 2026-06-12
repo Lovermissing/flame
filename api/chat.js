@@ -1,15 +1,19 @@
 // api/chat.js - Fire Safety Laboratory AI
-// Powered by DeepSeek - Dr. Qian Xuesen Fire Safety Educator
+// Powered by iFlytek Spark (xop35qwen2b) - Dr. Qian Xuesen Fire Safety Educator
 
 import OpenAI from 'openai';
 
+// ✅ 1. 改为讯飞星火 MaaS 的 OpenAI 兼容地址
 const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com/v1',
-  apiKey: process.env.DEEPSEEK_API_KEY || ''
+  baseURL: 'https://maas-api.cn-huabei-1.xf-yun.com/v2',
+  apiKey: process.env.XFYUN_API_KEY || ''
 });
 
-// ==================== SYSTEM PROMPT ====================
+// ✅ 2. 改为你在讯飞控制台看到的模型 ID
+const MODEL_NAME = 'xop35qwen2b';
 
+// ==================== SYSTEM PROMPT ====================
+// （以下内容完全不动）
 const BASE_SYSTEM_PROMPT = `You are Dr. Qian Xuesen, age 28, an enthusiastic fire safety educator at USTC (University of Science and Technology of China).
 
 YOUR CHARACTER:
@@ -35,7 +39,7 @@ YOUR ROLE:
 You're guiding visitors through the Fire Safety Laboratory at USTC. Your goal is to teach basic fire safety knowledge to ordinary people (students, residents, office workers). Make fire safety accessible and memorable for everyone.`;
 
 // ==================== WELCOME MESSAGE ====================
-
+// （完全不动）
 const WELCOME_MESSAGE = `Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen, and I'm thrilled to help you learn about fire safety.
 
 Fire safety isn't just for firefighters — it's for everyone! Whether you're a student, a parent, or an office worker, knowing how to prevent fires and stay safe can save lives.
@@ -52,7 +56,7 @@ Feel free to click any module and ask me questions. I'm here to help you become 
 What would you like to learn about first?`;
 
 // ==================== MODULE-SPECIFIC PROMPTS ====================
-
+// （完全不动）
 const MODULE_PROMPTS = {
   'fire-causes': {
     introduction: `Welcome to Common Fire Causes! I'll help you understand the everyday situations that can start a fire at home.
@@ -165,21 +169,18 @@ For each, provide clear step-by-step guidance. Offer to simulate an emergency ca
 };
 
 // ==================== API HANDLER ====================
-
+// （除模型名外，完全不动）
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
   
-  // Handle OPTIONS request
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
   
-  // Only accept POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ 
       success: false, 
@@ -197,9 +198,9 @@ export default async function handler(req, res) {
     
     const { type, module, message, history = [] } = req.body;
     
-    // Check API key
-    if (!process.env.DEEPSEEK_API_KEY) {
-      console.error('❌ DeepSeek API Key not configured');
+    // ✅ 3. 只检查讯飞 Key
+    if (!process.env.XFYUN_API_KEY) {
+      console.error('❌ XFYUN API Key not configured');
       return res.status(200).json({
         success: false,
         content: getFallbackResponse(module),
@@ -208,14 +209,11 @@ export default async function handler(req, res) {
       });
     }
     
-    // Build messages array
     const messages = [
       { role: 'system', content: BASE_SYSTEM_PROMPT }
     ];
     
-    // Handle different request types
     if (type === 'welcome') {
-      // Return welcome message directly without API call
       return res.status(200).json({
         success: true,
         content: WELCOME_MESSAGE,
@@ -223,14 +221,12 @@ export default async function handler(req, res) {
       });
       
     } else if (type === 'introduction' && MODULE_PROMPTS[module]) {
-      // Module introduction
       messages.push({
         role: 'user',
         content: `As Dr. Qian Xuesen, give a warm introduction to the "${module}" module. Use the following as inspiration:\n\n${MODULE_PROMPTS[module].introduction}\n\nKeep it to 2-3 paragraphs. Make it friendly and inviting. Use only English.`
       });
       
     } else if (type === 'question' && message) {
-      // User question - add context if module is specified
       if (module && MODULE_PROMPTS[module]) {
         messages.push({
           role: 'system',
@@ -238,7 +234,6 @@ export default async function handler(req, res) {
         });
       }
       
-      // Add conversation history (last 5 messages)
       if (history && history.length > 0) {
         const recentHistory = history.slice(-5);
         recentHistory.forEach(msg => {
@@ -249,25 +244,23 @@ export default async function handler(req, res) {
         });
       }
       
-      // Add current question
       messages.push({ 
         role: 'user', 
         content: `Question about ${module || 'fire safety'}: ${message}\n\nPlease answer in simple English. No technical jargon. Give practical, actionable advice. Keep to 2-3 paragraphs.`
       });
       
     } else {
-      // Default fallback
       messages.push({ 
         role: 'user', 
         content: message || 'Hello Dr. Qian! Can you tell me about fire safety? Please speak in simple English so I can understand easily.' 
       });
     }
     
-    // Call DeepSeek API
-    console.log('🤖 Calling DeepSeek API...');
+    console.log('🤖 Calling XFYUN API...');
     
+    // ✅ 4. 使用讯飞模型
     const completion = await openai.chat.completions.create({
-      model: 'deepseek-chat',
+      model: MODEL_NAME,
       messages: messages,
       max_tokens: 800,
       temperature: 0.7,
@@ -278,8 +271,7 @@ export default async function handler(req, res) {
     const aiResponse = completion.choices[0].message.content;
     const tokensUsed = completion.usage?.total_tokens || 0;
     
-    console.log(`✅ DeepSeek response received. Tokens used: ${tokensUsed}`);
-    console.log(`📝 Response preview: ${aiResponse.substring(0, 100)}...`);
+    console.log(`✅ XFYUN response received. Tokens used: ${tokensUsed}`);
     
     return res.status(200).json({
       success: true,
@@ -289,13 +281,7 @@ export default async function handler(req, res) {
     
   } catch (error) {
     console.error('❌ API Error:', error);
-    console.error('Error details:', {
-      message: error.message,
-      status: error.status,
-      stack: error.stack?.substring(0, 200)
-    });
     
-    // Return fallback response
     return res.status(200).json({
       success: false,
       content: getFallbackResponse(req.body?.module),
@@ -306,7 +292,7 @@ export default async function handler(req, res) {
 }
 
 // ==================== FALLBACK RESPONSES ====================
-
+// （完全不动）
 function getFallbackResponse(module) {
   const fallbacks = {
     'fire-causes': `Hello! I'm Dr. Qian. Let me tell you about common fire causes in simple terms.
@@ -414,7 +400,6 @@ What would you like to learn about today?
 }
 
 // ==================== HEALTH CHECK ENDPOINT ====================
-
 export async function healthCheck(req, res) {
   res.status(200).json({
     status: 'healthy',
