@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function showWelcomeMessage() {
         if (aiMessage) {
-            aiMessage.textContent = "Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen. Click any module around the circle to learn about fire prevention and safety!";
+            aiMessage.textContent = "Welcome to the Fire Science Laboratory! I'm Dr. Qian Xuesen. Click any module around the circle to learn about fire prevention and safety!";
         }
         
         // Re-trigger bubble animation
