@@ -40,7 +40,7 @@ You're guiding visitors through the Fire Safety Laboratory at USTC. Your goal is
 
 // ==================== WELCOME MESSAGE ====================
 // （完全不动）
-const WELCOME_MESSAGE = `Welcome to the Fire Safety Laboratory! I'm Dr. Qian Xuesen, and I'm thrilled to help you learn about fire safety.
+const WELCOME_MESSAGE = `Welcome to the Fire Science Laboratory! I'm Dr. Qian Xuesen, and I'm thrilled to help you learn about fire safety.
 
 Fire safety isn't just for firefighters — it's for everyone! Whether you're a student, a parent, or an office worker, knowing how to prevent fires and stay safe can save lives.
 
